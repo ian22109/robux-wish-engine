@@ -59,12 +59,13 @@ const Index = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://corsproxy.io/?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(keyword)}&limit=10`)}`
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
       );
       const data = await res.json();
       setResults(data.data ?? []);
       setShowResults(true);
-    } catch {
+    } catch (err) {
+      console.error("Search error:", err);
       setResults([]);
     } finally {
       setLoading(false);
@@ -141,7 +142,7 @@ const Index = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                 >
                   <img
-                    src={`https://corsproxy.io/?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=48x48&format=Png&isCircular=true`)}`}
+                    src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=48x48&format=Png&isCircular=true`)}`}
                     alt={user.name}
                     className="w-8 h-8 rounded-full bg-muted"
                     onError={(e) => {
@@ -167,7 +168,7 @@ const Index = () => {
         {selectedUser && (
           <div className="flex items-center gap-3 mb-8 p-4 rounded-lg bg-accent border border-border">
             <img
-              src={`https://corsproxy.io/?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${selectedUser.id}&size=48x48&format=Png&isCircular=true`)}`}
+              src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${selectedUser.id}&size=48x48&format=Png&isCircular=true`)}`}
               alt={selectedUser.name}
               className="w-10 h-10 rounded-full bg-muted"
               onError={(e) => {
