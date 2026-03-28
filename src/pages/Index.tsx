@@ -203,7 +203,7 @@ const Index = () => {
         {selectedUser && (
           <div className="flex items-center gap-3 mb-8 p-4 rounded-lg bg-accent border border-border">
             <img
-              src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${selectedUser.id}&size=48x48&format=Png&isCircular=true`)}`}
+              src={avatars[selectedUser.id] ?? "/placeholder.svg"}
               alt={selectedUser.name}
               className="w-10 h-10 rounded-full bg-muted"
               onError={(e) => {
@@ -216,7 +216,7 @@ const Index = () => {
             </div>
             <Button size="sm" onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Coins className="h-4 w-4" />
-              Coins schenken
+              Gift Coins
             </Button>
           </div>
         )}
