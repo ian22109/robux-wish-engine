@@ -27,9 +27,25 @@ const COIN_PACKAGES = [
   { coins: 10000, price: 99.99, bonus: "25%" },
 ];
 
+const PROXY = "https://api.allorigins.win/raw?url=";
+
+const getAvatarUrl = (userId: number) =>
+  `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=true`)}`;
+
+const fetchAvatarDirect = async (userId: number): Promise<string> => {
+  try {
+    const res = await fetch(getAvatarUrl(userId));
+    const data = await res.json();
+    return data?.data?.[0]?.imageUrl ?? "/placeholder.svg";
+  } catch {
+    return "/placeholder.svg";
+  }
+};
+
 const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<RobloxUser[]>([]);
+  const [avatars, setAvatars] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedUser, setSelectedUser] = useState<RobloxUser | null>(null);
@@ -59,11 +75,30 @@ const Index = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
+        `${PROXY}${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
       );
       const data = await res.json();
-      setResults(data.data ?? []);
+      const users: RobloxUser[] = data.data ?? [];
+      setResults(users);
       setShowResults(true);
+
+      // Fetch avatars in parallel
+      if (users.length > 0) {
+        const ids = users.map(u => u.id);
+        try {
+          const thumbRes = await fetch(
+            `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${ids.join(",")}&size=150x150&format=Png&isCircular=true`)}`
+          );
+          const thumbData = await thumbRes.json();
+          const newAvatars: Record<number, string> = {};
+          (thumbData?.data ?? []).forEach((t: { targetId: number; imageUrl: string }) => {
+            if (t.imageUrl) newAvatars[t.targetId] = t.imageUrl;
+          });
+          setAvatars(prev => ({ ...prev, ...newAvatars }));
+        } catch {
+          console.error("Failed to load avatars");
+        }
+      }
     } catch (err) {
       console.error("Search error:", err);
       setResults([]);
@@ -75,7 +110,7 @@ const Index = () => {
   const handleInputChange = (value: string) => {
     setQuery(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => searchUsers(value), 400);
+    debounceRef.current = setTimeout(() => searchUsers(value), 200);
   };
 
   const pickUser = (user: RobloxUser) => {
@@ -130,10 +165,10 @@ const Index = () => {
           {showResults && (
             <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
               {loading && (
-                <div className="px-4 py-3 text-sm text-muted-foreground">Suche…</div>
+                <div className="px-4 py-3 text-sm text-muted-foreground">Searching…</div>
               )}
               {!loading && results.length === 0 && query.trim() && (
-                <div className="px-4 py-3 text-sm text-muted-foreground">Keine Nutzer gefunden</div>
+                <div className="px-4 py-3 text-sm text-muted-foreground">No users found</div>
               )}
               {results.map((user) => (
                 <button
@@ -142,7 +177,7 @@ const Index = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                 >
                   <img
-                    src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=48x48&format=Png&isCircular=true`)}`}
+                    src={avatars[user.id] ?? "/placeholder.svg"}
                     alt={user.name}
                     className="w-8 h-8 rounded-full bg-muted"
                     onError={(e) => {
@@ -168,7 +203,7 @@ const Index = () => {
         {selectedUser && (
           <div className="flex items-center gap-3 mb-8 p-4 rounded-lg bg-accent border border-border">
             <img
-              src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${selectedUser.id}&size=48x48&format=Png&isCircular=true`)}`}
+              src={avatars[selectedUser.id] ?? "/placeholder.svg"}
               alt={selectedUser.name}
               className="w-10 h-10 rounded-full bg-muted"
               onError={(e) => {
@@ -181,7 +216,7 @@ const Index = () => {
             </div>
             <Button size="sm" onClick={() => setDialogOpen(true)} className="gap-1.5">
               <Coins className="h-4 w-4" />
-              Coins schenken
+              Gift Coins
             </Button>
           </div>
         )}
@@ -247,12 +282,12 @@ const Index = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {purchaseStep === "done" ? "Kauf abgeschlossen!" : "Coins schenken"}
+              {purchaseStep === "done" ? "Purchase Complete!" : "Gift Coins"}
             </DialogTitle>
             <DialogDescription>
               {purchaseStep === "done"
-                ? "Dies war ein Demo-Kauf. Es wurde nichts berechnet."
-                : `Wähle ein Paket für ${selectedUser?.displayName ?? "den Nutzer"}`}
+                ? "This was a demo purchase. Nothing was charged."
+                : `Choose a package for ${selectedUser?.displayName ?? "the user"}`}
             </DialogDescription>
           </DialogHeader>
 
@@ -288,7 +323,7 @@ const Index = () => {
                 disabled={!selectedPackage}
                 onClick={handlePurchase}
               >
-                Weiter
+                Continue
               </Button>
             </div>
           )}
@@ -297,31 +332,31 @@ const Index = () => {
             <div className="space-y-4 py-2">
               <div className="bg-accent rounded-lg p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Empfänger</span>
+                  <span className="text-muted-foreground">Recipient</span>
                   <span className="font-medium text-foreground">@{selectedUser?.name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Paket</span>
+                  <span className="text-muted-foreground">Package</span>
                   <span className="font-medium text-foreground">
                     {selectedPackage.coins.toLocaleString()} Coins
                   </span>
                 </div>
                 <div className="flex justify-between text-sm border-t border-border pt-2">
-                  <span className="font-semibold text-foreground">Gesamt</span>
+                  <span className="font-semibold text-foreground">Total</span>
                   <span className="font-bold text-foreground">${selectedPackage.price}</span>
                 </div>
               </div>
 
               <p className="text-xs text-muted-foreground text-center">
-                Dies ist ein Demo-Kauf. Es wird nichts berechnet.
+                This is a demo purchase. Nothing will be charged.
               </p>
 
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => setPurchaseStep("select")}>
-                  Zurück
+                  Back
                 </Button>
                 <Button className="flex-1" onClick={confirmPurchase}>
-                  Demo kaufen
+                  Demo Purchase
                 </Button>
               </div>
             </div>
@@ -337,11 +372,11 @@ const Index = () => {
                   {selectedPackage?.coins.toLocaleString()} Coins
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  wurden an @{selectedUser?.name} gesendet (Demo)
+                  sent to @{selectedUser?.name} (Demo)
                 </p>
               </div>
               <Button onClick={closeDialog} className="w-full">
-                Schließen
+                Close
               </Button>
             </div>
           )}
