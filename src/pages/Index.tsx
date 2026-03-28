@@ -59,12 +59,13 @@ const Index = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://corsproxy.io/?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${encodeURIComponent(keyword)}&limit=10`)}`
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
       );
       const data = await res.json();
       setResults(data.data ?? []);
       setShowResults(true);
-    } catch {
+    } catch (err) {
+      console.error("Search error:", err);
       setResults([]);
     } finally {
       setLoading(false);
