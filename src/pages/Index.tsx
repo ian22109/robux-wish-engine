@@ -282,12 +282,12 @@ const Index = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {purchaseStep === "done" ? "Kauf abgeschlossen!" : "Coins schenken"}
+              {purchaseStep === "done" ? "Purchase Complete!" : "Gift Coins"}
             </DialogTitle>
             <DialogDescription>
               {purchaseStep === "done"
-                ? "Dies war ein Demo-Kauf. Es wurde nichts berechnet."
-                : `Wähle ein Paket für ${selectedUser?.displayName ?? "den Nutzer"}`}
+                ? "This was a demo purchase. Nothing was charged."
+                : `Choose a package for ${selectedUser?.displayName ?? "the user"}`}
             </DialogDescription>
           </DialogHeader>
 
