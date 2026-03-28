@@ -1,30 +1,150 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project">
-    <meta name="author" content="Lovable" />
-
-    <!-- TODO: Update og:title to match your application name -->
-    
-    
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8fb468b1-e361-49c1-b867-f3a16fb8437a/id-preview-332ecccf--abba04a2-3f67-4004-88e2-7175f84c5446.lovable.app-1774722268583.png">
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8fb468b1-e361-49c1-b867-f3a16fb8437a/id-preview-332ecccf--abba04a2-3f67-4004-88e2-7175f84c5446.lovable.app-1774722268583.png">
-    <meta property="og:title" content="Lovable App">
-  <meta name="twitter:title" content="Lovable App">
-  <meta property="og:description" content="Lovable Generated Project">
-  <meta name="twitter:description" content="Lovable Generated Project">
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameX - Gift Coins</title>
+    <meta name="description" content="Send Coins to friends on GameX">
+    <link rel="stylesheet" href="styles.css">
 </head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-left">
+                <span class="logo">GAMEX</span>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Charts</a>
+                    <a href="#" class="nav-link">Marketplace</a>
+                    <a href="#" class="nav-link">Create</a>
+                    <a href="#" class="nav-link">Coins</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="search-container">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search" class="nav-search">
+                </div>
+                <button class="btn btn-primary">Sign Up</button>
+                <button class="btn btn-outline">Log In</button>
+            </div>
+        </div>
+    </nav>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero -->
+        <div class="hero">
+            <h1 class="hero-title">Gift Coins</h1>
+            <p class="hero-subtitle">Send up to 25% more Coins to friends and family!</p>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrapper" id="searchWrapper">
+            <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search Roblox Username"
+                class="search-input"
+            >
+
+            <!-- Search Results Dropdown -->
+            <div class="search-results" id="searchResults" style="display: none;">
+                <div id="searchResultsContent"></div>
+            </div>
+        </div>
+
+        <!-- Selected User Badge -->
+        <div class="selected-user" id="selectedUserBadge" style="display: none;">
+            <img id="selectedUserAvatar" src="" alt="" class="selected-user-avatar">
+            <div class="selected-user-info">
+                <p class="selected-user-name" id="selectedUserDisplayName"></p>
+                <p class="selected-user-username" id="selectedUserUsername"></p>
+            </div>
+            <button class="btn btn-primary btn-gift" id="openDialogBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M16 8h-6a2 2 0 1 0 0 4h6a2 2 0 1 1 0 4H8"></path>
+                    <path d="M12 18V6"></path>
+                </svg>
+                Gift Coins
+            </button>
+        </div>
+
+        <!-- Info Sections -->
+        <div class="info-sections">
+            <section class="info-section">
+                <h2 class="info-title">What's GameX?</h2>
+                <p class="info-text">
+                    GameX is a global platform where millions of people create, play, and connect.
+                    Coins are the virtual currency that lets users customize their avatar, access
+                    experiences, and more.
+                </p>
+            </section>
+
+            <section class="info-section">
+                <h2 class="info-title">What's Gift Coins?</h2>
+                <p class="info-text">
+                    This feature lets you send Coins directly to the GameX account of the person
+                    who shared this link. Just follow the steps to complete your gift — no codes
+                    or gift cards needed.
+                </p>
+            </section>
+
+            <section class="info-section">
+                <h2 class="info-title">Don't know the person?</h2>
+                <p class="info-text">
+                    If you don't know the person sending the link, you can ignore it and contact
+                    <a href="#" class="info-link">GameX support</a>.
+                </p>
+            </section>
+        </div>
+
+        <!-- Banner -->
+        <div class="banner">
+            <img src="src/assets/characters-banner.jpg" alt="GameX characters" class="banner-image">
+        </div>
+
+        <!-- Footer Disclaimer -->
+        <p class="disclaimer">
+            Coins are provided to you by GameX. When you buy Coins you receive only a limited,
+            non-refundable, non-transferable, revocable license to use Coins, which has no value
+            in real currency. By proceeding, (1) you agree that you are over 18 and that you
+            authorize us to charge your account, and (2) you represent that you understand and
+            agree to the <a href="#" class="disclaimer-link">Terms of Use</a>, which
+            includes an agreement to arbitrate any dispute between you and GameX, and
+            <a href="#" class="disclaimer-link">Privacy Policy</a>.
+        </p>
+    </main>
+
+    <!-- Purchase Dialog -->
+    <div class="dialog-overlay" id="dialogOverlay" style="display: none;">
+        <div class="dialog" id="dialog">
+            <button class="dialog-close" id="dialogClose">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18"></path>
+                    <path d="m6 6 12 12"></path>
+                </svg>
+            </button>
+
+            <div class="dialog-header">
+                <h2 class="dialog-title" id="dialogTitle">Gift Coins</h2>
+                <p class="dialog-description" id="dialogDescription">Choose a package for the user</p>
+            </div>
+
+            <div class="dialog-body" id="dialogBody">
+                <!-- Content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
