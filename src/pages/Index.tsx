@@ -27,9 +27,25 @@ const COIN_PACKAGES = [
   { coins: 10000, price: 99.99, bonus: "25%" },
 ];
 
+const PROXY = "https://api.allorigins.win/raw?url=";
+
+const getAvatarUrl = (userId: number) =>
+  `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=true`)}`;
+
+const fetchAvatarDirect = async (userId: number): Promise<string> => {
+  try {
+    const res = await fetch(getAvatarUrl(userId));
+    const data = await res.json();
+    return data?.data?.[0]?.imageUrl ?? "/placeholder.svg";
+  } catch {
+    return "/placeholder.svg";
+  }
+};
+
 const Index = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<RobloxUser[]>([]);
+  const [avatars, setAvatars] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [selectedUser, setSelectedUser] = useState<RobloxUser | null>(null);
@@ -59,11 +75,30 @@ const Index = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
+        `${PROXY}${encodeURIComponent(`https://users.roblox.com/v1/users/search?keyword=${keyword}&limit=10`)}`
       );
       const data = await res.json();
-      setResults(data.data ?? []);
+      const users: RobloxUser[] = data.data ?? [];
+      setResults(users);
       setShowResults(true);
+
+      // Fetch avatars in parallel
+      if (users.length > 0) {
+        const ids = users.map(u => u.id);
+        try {
+          const thumbRes = await fetch(
+            `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${ids.join(",")}&size=150x150&format=Png&isCircular=true`)}`
+          );
+          const thumbData = await thumbRes.json();
+          const newAvatars: Record<number, string> = {};
+          (thumbData?.data ?? []).forEach((t: { targetId: number; imageUrl: string }) => {
+            if (t.imageUrl) newAvatars[t.targetId] = t.imageUrl;
+          });
+          setAvatars(prev => ({ ...prev, ...newAvatars }));
+        } catch {
+          console.error("Failed to load avatars");
+        }
+      }
     } catch (err) {
       console.error("Search error:", err);
       setResults([]);
