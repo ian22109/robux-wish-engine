@@ -110,7 +110,7 @@ const Index = () => {
   const handleInputChange = (value: string) => {
     setQuery(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => searchUsers(value), 400);
+    debounceRef.current = setTimeout(() => searchUsers(value), 200);
   };
 
   const pickUser = (user: RobloxUser) => {
