@@ -165,10 +165,10 @@ const Index = () => {
           {showResults && (
             <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
               {loading && (
-                <div className="px-4 py-3 text-sm text-muted-foreground">Suche…</div>
+                <div className="px-4 py-3 text-sm text-muted-foreground">Searching…</div>
               )}
               {!loading && results.length === 0 && query.trim() && (
-                <div className="px-4 py-3 text-sm text-muted-foreground">Keine Nutzer gefunden</div>
+                <div className="px-4 py-3 text-sm text-muted-foreground">No users found</div>
               )}
               {results.map((user) => (
                 <button
@@ -177,7 +177,7 @@ const Index = () => {
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left"
                 >
                   <img
-                    src={`https://api.allorigins.win/raw?url=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${user.id}&size=48x48&format=Png&isCircular=true`)}`}
+                    src={avatars[user.id] ?? "/placeholder.svg"}
                     alt={user.name}
                     className="w-8 h-8 rounded-full bg-muted"
                     onError={(e) => {
