@@ -323,7 +323,7 @@ const Index = () => {
                 disabled={!selectedPackage}
                 onClick={handlePurchase}
               >
-                Weiter
+                Continue
               </Button>
             </div>
           )}
@@ -332,31 +332,31 @@ const Index = () => {
             <div className="space-y-4 py-2">
               <div className="bg-accent rounded-lg p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Empfänger</span>
+                  <span className="text-muted-foreground">Recipient</span>
                   <span className="font-medium text-foreground">@{selectedUser?.name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Paket</span>
+                  <span className="text-muted-foreground">Package</span>
                   <span className="font-medium text-foreground">
                     {selectedPackage.coins.toLocaleString()} Coins
                   </span>
                 </div>
                 <div className="flex justify-between text-sm border-t border-border pt-2">
-                  <span className="font-semibold text-foreground">Gesamt</span>
+                  <span className="font-semibold text-foreground">Total</span>
                   <span className="font-bold text-foreground">${selectedPackage.price}</span>
                 </div>
               </div>
 
               <p className="text-xs text-muted-foreground text-center">
-                Dies ist ein Demo-Kauf. Es wird nichts berechnet.
+                This is a demo purchase. Nothing will be charged.
               </p>
 
               <div className="flex gap-2">
                 <Button variant="outline" className="flex-1" onClick={() => setPurchaseStep("select")}>
-                  Zurück
+                  Back
                 </Button>
                 <Button className="flex-1" onClick={confirmPurchase}>
-                  Demo kaufen
+                  Demo Purchase
                 </Button>
               </div>
             </div>
@@ -372,11 +372,11 @@ const Index = () => {
                   {selectedPackage?.coins.toLocaleString()} Coins
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  wurden an @{selectedUser?.name} gesendet (Demo)
+                  sent to @{selectedUser?.name} (Demo)
                 </p>
               </div>
               <Button onClick={closeDialog} className="w-full">
-                Schließen
+                Close
               </Button>
             </div>
           )}
